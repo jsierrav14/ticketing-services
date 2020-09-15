@@ -1,14 +1,20 @@
 import express from 'express'
+import {body,validationResult} from 'express-validator'
+import AuthController from '../controllers/auth.controller'
+
 const router = express.Router();
 
-router.post('/api/users/signup',(req, res)=>{
-   const {email, password} = req.body;
-  
-   if(!email || typeof email !== 'string'){
-       res.status(400).send('Provide a valid email') 
-   }
-  
-})
+const auth = new AuthController();
+
+router.post('/api/users/signup',[
+    body('email')
+    .isEmail()
+    .withMessage('Email must be valid'),
+    body('password')
+    .trim()
+    .isLength({min:4, max:20})
+    .withMessage('Password must be between 4 and 20 characters')
+],auth.signUp)
 
 
 export {router as signUpRouter}
