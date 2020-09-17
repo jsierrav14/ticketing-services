@@ -1,5 +1,7 @@
 import express,{Request, Response} from 'express'
 import {body,validationResult} from 'express-validator'
+import {RequestValidationError} from '../errors/request-validation-error'
+import {DatabaseConnectionError} from '../errors/database-connection-error'
 
 export default class AuthController {
 
@@ -9,15 +11,14 @@ export default class AuthController {
 
         if(!errors.isEmpty()){
        
-            const error = new Error('Invalid email or password')
-           // error.reasons = errors.array();
-            throw error;
+           throw new RequestValidationError(errors.array())
         }
         const {email, password} = req.body;
   
         if(!email || typeof email !== 'string'){
             res.status(400).send('Provide a valid email') 
         }
+        throw new DatabaseConnectionError()
 
         res.send({})
     }
