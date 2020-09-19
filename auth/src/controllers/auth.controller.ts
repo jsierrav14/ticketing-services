@@ -1,11 +1,13 @@
-import express,{Request, Response} from 'express'
-import {body,validationResult} from 'express-validator'
+import {Request, Response} from 'express'
+import {validationResult} from 'express-validator'
 import {RequestValidationError} from '../errors/request-validation-error'
-import {DatabaseConnectionError} from '../errors/database-connection-error'
+import {BadRequestError} from '../errors/bad-request-error'
+import {User} from '../models/user';
+
 
 export default class AuthController {
 
-    public signUp(req:Request, res:Response){
+    public async signUp (req:Request, res:Response){
         
         const errors = validationResult(req);
 
@@ -13,14 +15,21 @@ export default class AuthController {
        
            throw new RequestValidationError(errors.array())
         }
-        const {email, password} = req.body;
   
-        if(!email || typeof email !== 'string'){
-            res.status(400).send('Provide a valid email') 
+        const {email,password} = req.body;
+        const existingUser = await User.findOne({email});
+     
+        if(existingUser){
+        throw new BadRequestError('Email in use')
+           return res.send({})
         }
-        throw new DatabaseConnectionError()
 
-        res.send({})
+        const user = User.build({email,password})
+
+        await user.save();
+
+
+        res.status(201).send(user)
     }
     
 }
