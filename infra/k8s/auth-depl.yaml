@@ -15,6 +15,12 @@ spec:
       containers:
         - name: auth
           image: us.gcr.io/ticketing-dev-289021/auth
+          env:
+             - name: jwt
+               valueFrom:
+                 secretKeyRef:
+                   name: jwt-secret
+                   key: jwt
 ---
 apiVersion: v1
 kind: Service
