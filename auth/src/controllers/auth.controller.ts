@@ -1,20 +1,14 @@
 import { Request, Response } from 'express'
-import { validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
-import { RequestValidationError } from '../errors/request-validation-error'
 import { BadRequestError } from '../errors/bad-request-error'
 import { User } from '../models/user';
-
+import { Password } from '../services/password';
 
 export default class AuthController {
 
     public async signUp(req: Request, res: Response) {
 
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            throw new RequestValidationError(errors.array())
-        }
+    
 
         const { email, password } = req.body;
         const existingUser = await User.findOne({ email });
@@ -39,6 +33,48 @@ export default class AuthController {
 
 
         res.status(201).send(user)
+    }
+
+    public async signIn(req:Request, res:Response){
+
+         const {email, password} = req.body;
+
+         const existingUser = await User.findOne({email})
+         if(!existingUser){
+            throw new BadRequestError('Invalid credentials')
+
+         }
+
+
+         const passwordsMatch = await Password.compare(existingUser.password,password);
+
+         if(!passwordsMatch){
+            throw new BadRequestError('Invalid credentials')
+
+         }
+
+         const userJwt = jwt.sign({
+            id: existingUser.id,
+            email: existingUser.email
+        }, process.env.jwt!)
+
+
+        req.session = { jwt: userJwt };
+
+
+        res.status(201).send(existingUser)
+      
+    }
+
+    public async getCurrentUser(req:Request, res:Response){
+      res.send({currentUser:req.currentUser!})
+    }
+
+    public async singOut(req:Request, res:Response){
+ 
+        req.session = null;
+
+        res.send({})
     }
 
 }

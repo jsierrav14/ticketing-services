@@ -1,9 +1,10 @@
 import express from 'express'
+import AuthController from '../controllers/auth.controller'
+
 const router = express.Router();
 
-router.post('/api/users/signout',(req, res)=>{
-  res.send('Hi here')
-})
+const auth = new AuthController();
+router.post('/api/users/signout',auth.singOut)
 
 
 export {router as signOutRouter}

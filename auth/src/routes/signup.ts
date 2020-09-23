@@ -1,6 +1,7 @@
 import express from 'express'
 import {body,validationResult} from 'express-validator'
 import AuthController from '../controllers/auth.controller'
+import {validateRequest} from '../middlewares/validate-request.middleware'
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.post('/api/users/signup',[
     .trim()
     .isLength({min:4, max:20})
     .withMessage('Password must be between 4 and 20 characters')
-],auth.signUp)
+],validateRequest,auth.signUp)
 
 
 export {router as signUpRouter}
