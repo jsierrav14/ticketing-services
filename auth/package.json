@@ -30,12 +30,15 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.6",
     "session": "^0.1.0",
+    "supertest": "^5.0.0",
     "ts-node-dev": "^1.0.0-pre.62",
     "typescript": "^4.0.2"
   },
   "devDependencies": {
     "@types/jest": "^26.0.14",
     "@types/supertest": "^2.0.10",
-    "mongodb-memory-server": "^6.8.0"
+    "jest": "^26.4.2",
+    "mongodb-memory-server": "^6.8.0",
+    "ts-jest": "^26.4.0"
   }
 }

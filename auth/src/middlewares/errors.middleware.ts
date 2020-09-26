@@ -10,8 +10,6 @@ export const errorHandler = (
 
 
     if (err instanceof CustomError) {
-    
-
         return res.status(400).send({errors:err.serializeErrors()})
     }
 
