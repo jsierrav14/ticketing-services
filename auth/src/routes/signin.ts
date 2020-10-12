@@ -1,6 +1,6 @@
 import express from 'express'
 import {body,validationResult} from 'express-validator'
-import {validateRequest} from '../middlewares/validate-request.middleware'
+import {validateRequest} from '@js-ecommerceapp/common'
 import AuthController from '../controllers/auth.controller'
 const router = express.Router();
 const auth = new AuthController();

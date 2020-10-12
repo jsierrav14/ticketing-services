@@ -7,9 +7,7 @@ import { currentUserRouter } from './routes/current-user'
 import { signInRouter } from './routes/signin'
 import { signOutRouter } from './routes/signout'
 import { signUpRouter } from './routes/signup'
-import { errorHandler } from './middlewares/errors.middleware'
-import { NotFoundError } from './errors/not-found-error';
-
+import { errorHandler,NotFoundError  } from '@js-ecommerceapp/common'
 const app = express();
 
 app.use(json())

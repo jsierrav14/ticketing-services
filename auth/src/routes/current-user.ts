@@ -1,6 +1,6 @@
 import express from 'express'
 import AuthController from '../controllers/auth.controller'
-import {currentUser} from '../middlewares/current-user.middleware'
+import {currentUser} from '@js-ecommerceapp/common'
 const router = express.Router();
 
 
