@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: us.gcr.io/ticketing-dev-289021/client-app
+          image: 091994/client-next
           
 ---
 apiVersion: v1
