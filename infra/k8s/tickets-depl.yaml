@@ -16,7 +16,7 @@ spec:
         - name: tickets
           image: 091994/tickets
           env:
-             - name: MOGO_URI
+             - name: MONGO_URI
                value: 'mongodb://tickets-mongo-srv:27017/tickets' 
              - name: jwt
                valueFrom:

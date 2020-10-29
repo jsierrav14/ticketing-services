@@ -4,6 +4,9 @@ import { json } from 'body-parser'
 import cookieSession from 'cookie-session'
 import { errorHandler,NotFoundError ,currentUser} from '@js-ecommerceapp/common'
 import {createTicketRouter} from './routes/new'
+import {showTicketRouter} from './routes/show'
+import { listTicketsRouter } from './routes'
+import { updateRouter } from './routes/update'
 const app = express();
 
 app.use(json())
@@ -17,8 +20,11 @@ app.use(
 )
 app.use(currentUser)
 app.use(createTicketRouter)
+app.use(showTicketRouter)
+app.use(listTicketsRouter)
+app.use(updateRouter)
 
-app.all('*', async (req, res, next) => {
+app.all('*', async (req, res) => {
     throw new NotFoundError();
 })
 

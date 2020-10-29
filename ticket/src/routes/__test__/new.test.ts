@@ -9,7 +9,7 @@ expect(response.status).not.toEqual(404)
 
 it('Can only be accessed if the user is signed id',async()=>{
     const respose = await request(app).post('/api/tickets').send({})
-    expect(respose.status).toEqual(400)
+    expect(respose.status).toEqual(401)
 })
 
 
@@ -41,8 +41,15 @@ it('Returns an error if an invalid price is provided',async()=>{
 it('Creates ticket with valid inputs',async()=>{
     let tickets = await Ticket.find({})
     expect(tickets.length).toEqual(0);
+
+    const title = 'asdaaczfrtg'
     await request(app).post('/api/tickets').set('Cookie',global.signin()).send({
-        title:'Okaa',
-        price:10
+        title:title,
+        price:20
     }).expect(201)
+
+    tickets = await Ticket.find({})
+    expect(tickets.length).toEqual(1)
+    expect(tickets[0].price).toEqual(20)
+    expect(tickets[0].title).toEqual(title)
 })
