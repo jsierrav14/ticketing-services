@@ -1,4 +1,4 @@
 auth/node_modules
 client/node_modules
 ticket/node_modules
-.vscode
+nats-test/node_modules
