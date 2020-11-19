@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import Ticket from '../model/Ticket.model';
 import { NotAuthorizedError, NotFoundError } from '@js-ecommerceapp/common';
-
+import {TicketCreatedPublisher} from '../events/publisher/ticket-created-publisher'
 class TicketController {
 
 
@@ -16,6 +16,12 @@ class TicketController {
             }
         )
          await ticket.save()
+       /*  await new TicketCreatedPublisher(client).publish({
+             id:ticket.id,
+             title:ticket.title,
+             price:ticket.price,
+             userId:ticket.userId
+         })*/
       
         res.status(201).send(ticket)
     }
