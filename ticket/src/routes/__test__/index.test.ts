@@ -1,6 +1,5 @@
 import request from 'supertest'
 import app from '../../app'
-
 const createTicket = async () => {
     await request(app).post('/api/tickets').set('Cookie', global.signin()).send({
         title: 'New Ticket',

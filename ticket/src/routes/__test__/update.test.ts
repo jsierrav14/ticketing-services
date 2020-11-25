@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import request from 'supertest'
 import app from '../../app'
+import {natsWrapper} from '../../nats.wrapper'
 
 
 const createTicket = async () => {
@@ -56,10 +57,25 @@ it('Can update with a payload',async()=>{
     const ticketResponse = await request(app).put(`/api/tickets/${response.body.id}`).set('Cookie',cookie).send({
           title:'Nuevo',
           price:21
-    }).expect(201)
+    }).expect(200)
   
     const ticket = await request(app).get(`/api/tickets/${response.body.id}`).send();
     expect(ticket.body.title).toEqual('Nuevo')
     expect(ticket.body.price).toEqual(21)
 
+})
+
+it('publishing an event', async()=>{
+    const cookie = global.signin();
+    const response =  await request(app).post('/api/tickets').set('Cookie', cookie).send({
+         title: 'New Ticket',
+         price: 20
+     })
+     const ticketResponse = await request(app).put(`/api/tickets/${response.body.id}`).set('Cookie',cookie).send({
+           title:'Nuevo',
+           price:21
+     }).expect(200)
+
+     expect(natsWrapper.client.publish).toHaveBeenCalled()
+   
 })

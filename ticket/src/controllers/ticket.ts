@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
 import Ticket from '../model/Ticket.model';
 import { NotAuthorizedError, NotFoundError } from '@js-ecommerceapp/common';
+import {natsWrapper} from '../nats.wrapper'
 import {TicketCreatedPublisher} from '../events/publisher/ticket-created-publisher'
+import {TicketUpdatedPublisher} from '../events/publisher/ticket-updated-publisher'
 class TicketController {
 
 
@@ -15,13 +17,13 @@ class TicketController {
                 userId:req.currentUser!.id
             }
         )
-         await ticket.save()
-       /*  await new TicketCreatedPublisher(client).publish({
+        await ticket.save()
+       await new TicketCreatedPublisher(natsWrapper.client).publish({
              id:ticket.id,
              title:ticket.title,
              price:ticket.price,
              userId:ticket.userId
-         })*/
+         })
       
         res.status(201).send(ticket)
     }
@@ -45,8 +47,15 @@ class TicketController {
             }
         )
         await ticket.save();
+        new TicketUpdatedPublisher(natsWrapper.client).publish({
+            id:ticket.id,
+            title:ticket.title,
+            price:ticket.price.toString(),
+            userId:ticket.userId
 
-        return res.status(201).send(ticket)
+        })
+
+        return res.status(200).send(ticket)
 
 
     }

@@ -7,7 +7,6 @@ it('Returns a 404 if the ticket is not found',async()=>{
 
    console.log(`/api/tickets/${id}`)
     const response = request(app).get(`/api/tickets/${id}`).send()
-    console.log((await response).status)
 })
 
 
