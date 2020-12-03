@@ -1,9 +1,10 @@
-import express, {Request,Response} from 'express'
+import { requireAuth } from '@js-ecommerceapp/common';
+import express, { Request, Response } from 'express'
+import OrdersController from '../controllers/orders.controllers';
 
 const router = express.Router();
+const orderController = new OrdersController();
 
-router.get('/api/orders', async(req:Request,res:Response)=>{
+router.get('/api/orders', requireAuth, orderController.getOrders)
 
-})
-
-export {router as indexOrderRouter}
+export { router as indexOrderRouter }

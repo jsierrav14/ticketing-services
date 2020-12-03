@@ -30,7 +30,7 @@ const orderSchema = new mongoose.Schema({
     status:{
         type: String,
         required:true,
-        enum:Object.values(OrderStatus),
+        enum:[OrderStatus.Complete,OrderStatus.AwaitingPayment,OrderStatus.Created],
         default:OrderStatus.Created
     },
     expiresAt:{
@@ -44,15 +44,14 @@ const orderSchema = new mongoose.Schema({
 },{
     toJSON:{
         transform(doc,ret){
-            ret.id=ret._id;
+            ret.id=ret._id
             delete ret._id
-
         }
     }
 })
-orderSchema.statics.build =(attrs : OrderAttrs)=>{
+orderSchema.static('build',(attrs : OrderAttrs)=>{
     return new Order(attrs)
-}
+})
 
 const Order = mongoose.model<OrderDoc,OrderModel>('Order',orderSchema);
 

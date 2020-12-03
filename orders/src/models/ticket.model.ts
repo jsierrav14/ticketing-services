@@ -36,10 +36,9 @@ const ticketSchema = new mongoose.Schema({
     }
 })
 
-ticketSchema.statics.build = (attrs: TicketAttrs) => {
-    return new Ticket(attrs)
+ticketSchema.statics.build = (attrs:TicketAttrs)=>{
+    return new Ticket(attrs);
 }
-
 
 ticketSchema.methods.isReserved = async function () {
     const existingOrder = await Order.findOne({

@@ -37,9 +37,17 @@ class OrdersController {
         await order.save();
 
 
-        res.status(201).send({})
+        res.status(201).send(order)
 
 
+    }
+    async getOrders(req:Request,res:Response){
+
+        const orders = await Order.find({
+            userId:req.currentUser!.id
+        }).populate('ticket')
+        
+        res.send(orders)
     }
 }
 
