@@ -1,7 +1,7 @@
 import { Response, Request } from 'express'
 import { Ticket } from '../models/ticket.model'
 import { Order } from '../models/order.model'
-import { BadRequestError, NotFoundError, OrderStatus } from '@js-ecommerceapp/common';
+import { BadRequestError, NotAuthorizedError, NotFoundError, OrderStatus } from '@js-ecommerceapp/common';
 
 const EXPIRATION_WINDOW_SECONDS = 15*60
 class OrdersController {
@@ -48,6 +48,19 @@ class OrdersController {
         }).populate('ticket')
         
         res.send(orders)
+    }
+    async showOrder(req:Request, res:Response){
+        const order = await Order.findById(req.params.orderId).populate('ticket')
+        if(!order){
+            throw new NotFoundError()
+        }
+        
+        if(order.userId !== req.currentUser!.id){
+          throw new NotAuthorizedError()
+        }
+
+
+        res.send(order)
     }
 }
 
