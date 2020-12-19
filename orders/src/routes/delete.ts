@@ -1,9 +1,9 @@
-import express, {Request,Response} from 'express'
+import { requireAuth } from '@js-ecommerceapp/common';
+import express from 'express'
+import OrdersController from '../controllers/orders.controllers';
 
 const router = express.Router();
-
-router.delete('/api/orders/:orderId', async(req:Request,res:Response)=>{
-
-})
+const orderController = new OrdersController()
+router.delete('/api/orders/:orderId', requireAuth, orderController.deleteOrder)
 
 export {router as deleteOrderRouter}
