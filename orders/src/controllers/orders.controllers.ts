@@ -44,6 +44,7 @@ class OrdersController {
             status:order.status,
             userId:order.userId,
             expiresAt:order.expiresAt.toISOString(),
+            version:order.ticket.version,
             ticket:{
                 id:ticket.id,
                 price:ticket.price
@@ -94,8 +95,9 @@ class OrdersController {
     
         new OrderCancelledPublisher(natsWrapper.client).publish({
             id:order.id,
+            version:order.ticket.version,
             ticket:{
-                id:order.ticket.id
+                id:order.ticket.id,
             }
         })
         res.status(204).send(order);

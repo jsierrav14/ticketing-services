@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import app from './app'
 import { natsWrapper } from './nats.wrapper'
+import {TicketUpdatedListener} from './events/listeners/ticket-update-listener'
+import {TicketCreatedListener} from './events/listeners/ticket-created-listener'
 const start = async () => {
 
     if (!process.env.jwt) {
@@ -39,6 +41,9 @@ const start = async () => {
         process.on('SIGTERM', () => {
             natsWrapper.client.close()
         })
+        new TicketCreatedListener(natsWrapper.client).listen();
+        new TicketUpdatedListener(natsWrapper.client).listen();
+        
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: false,
             useUnifiedTopology: true,

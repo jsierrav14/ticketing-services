@@ -20,6 +20,7 @@ class TicketController {
         await ticket.save()
        await new TicketCreatedPublisher(natsWrapper.client).publish({
              id:ticket.id,
+             version:ticket.version,
              title:ticket.title,
              price:ticket.price,
              userId:ticket.userId
@@ -49,6 +50,7 @@ class TicketController {
         await ticket.save();
         new TicketUpdatedPublisher(natsWrapper.client).publish({
             id:ticket.id,
+            version:ticket.version,
             title:ticket.title,
             price:ticket.price.toString(),
             userId:ticket.userId
