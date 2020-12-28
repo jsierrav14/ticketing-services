@@ -1,7 +1,7 @@
 import { Response, Request } from 'express'
 import { Ticket } from '../models/ticket.model'
-import { Order } from '../models/order.model'
-import { BadRequestError, NotAuthorizedError, NotFoundError, OrderStatus } from '@js-ecommerceapp/common';
+import { Order,OrderStatus } from '../models/order.model'
+import { BadRequestError, NotAuthorizedError, NotFoundError } from '@js-ecommerceapp/common';
 import {OrderCreatedPublisher} from '../events/publishers/order-created-publisher'
 import {OrderCancelledPublisher} from '../events/publishers/order-cancelled-publisher'
 import { natsWrapper } from '../nats.wrapper';
@@ -44,7 +44,7 @@ class OrdersController {
             status:order.status,
             userId:order.userId,
             expiresAt:order.expiresAt.toISOString(),
-            version:order.ticket.version,
+            version:order.version,
             ticket:{
                 id:ticket.id,
                 price:ticket.price
@@ -78,24 +78,32 @@ class OrdersController {
     }
 
     async deleteOrder(req:Request,res:Response){
+
+
         const { orderId } = req.params;
 
         const order = await Order.findById(orderId).populate('ticket');
     
-        if (!order) {
+       if (!order) {
           throw new NotFoundError();
         }
-        if (order.userId !== req.currentUser!.id) {
+        
+       
+       if (order.userId !== req.currentUser!.id) {
           throw new NotAuthorizedError();
         }
+       
+        
         order.status = OrderStatus.Cancelled;
+
         await order.save();
+        console.log(order)
     
         // publishing an event saying this was cancelled!
-    
-        new OrderCancelledPublisher(natsWrapper.client).publish({
+   
+      new OrderCancelledPublisher(natsWrapper.client).publish({
             id:order.id,
-            version:order.ticket.version,
+            version:order.version,
             ticket:{
                 id:order.ticket.id,
             }

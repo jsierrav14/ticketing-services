@@ -1,5 +1,6 @@
 import request from 'supertest'
 import app from '../../app'
+import mongoose from 'mongoose'
 import {Ticket} from '../../models/ticket.model'
 import {Order, OrderStatus} from '../../models/order.model'
 import {natsWrapper} from '../../nats.wrapper'
@@ -8,6 +9,7 @@ it('marks an order as cancelled', async () => {
     const ticket = Ticket.build({
       title: 'concert',
       price: 20,
+      id:mongoose.Types.ObjectId().toHexString()
     });
     await ticket.save();
   
@@ -19,6 +21,7 @@ it('marks an order as cancelled', async () => {
       .send({ ticketId: ticket.id })
       .expect(201);
   
+      console.log(order)
 
     // make a request to cancel the order
     await request(app)
@@ -37,6 +40,7 @@ it('marks an order as cancelled', async () => {
     const ticket = Ticket.build({
       title: 'concert',
       price: 20,
+      id:mongoose.Types.ObjectId().toHexString()
     });
     await ticket.save();
   
@@ -55,5 +59,5 @@ it('marks an order as cancelled', async () => {
       .set('Cookie', user)
       .send()
       .expect(204);
-      expect(natsWrapper.client).toHaveBeenCalled()
+      expect(natsWrapper.client.publish).toHaveBeenCalled()
   })

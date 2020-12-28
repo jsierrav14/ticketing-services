@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
 import {OrderStatus} from '@js-ecommerceapp/common'
 import { TicketDoc } from './ticket.model';
 
@@ -14,6 +15,7 @@ interface OrderDoc extends mongoose.Document {
     userId: string;
     status: OrderStatus;
     expiresAt: Date;
+    version:number;
     ticket: TicketDoc;
 }
 
@@ -30,7 +32,7 @@ const orderSchema = new mongoose.Schema({
     status:{
         type: String,
         required:true,
-        enum:[OrderStatus.Complete,OrderStatus.AwaitingPayment,OrderStatus.Created],
+        enum:[OrderStatus.Complete,OrderStatus.AwaitingPayment,OrderStatus.Created,OrderStatus.Cancelled],
         default:OrderStatus.Created
     },
     expiresAt:{
@@ -49,6 +51,9 @@ const orderSchema = new mongoose.Schema({
         }
     }
 })
+
+orderSchema.set('versionKey','version');
+orderSchema.plugin(updateIfCurrentPlugin)
 orderSchema.static('build',(attrs : OrderAttrs)=>{
     return new Order(attrs)
 })
