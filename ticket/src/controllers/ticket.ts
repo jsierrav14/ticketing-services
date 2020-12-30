@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import Ticket from '../model/Ticket.model';
-import { NotAuthorizedError, NotFoundError } from '@js-ecommerceapp/common';
+import { BadRequestError, NotAuthorizedError, NotFoundError } from '@js-ecommerceapp/common';
 import {natsWrapper} from '../nats.wrapper'
 import {TicketCreatedPublisher} from '../events/publisher/ticket-created-publisher'
 import {TicketUpdatedPublisher} from '../events/publisher/ticket-updated-publisher'
@@ -37,6 +37,10 @@ class TicketController {
         if(!ticket){
             throw new NotFoundError();
         }
+
+        if(ticket.orderId){
+            throw new BadRequestError('Cannot edit a reserved ticket')
+        }
        if(ticket.userId !== req.currentUser!.id){
             throw new NotAuthorizedError();
         }
@@ -52,7 +56,7 @@ class TicketController {
             id:ticket.id,
             version:ticket.version,
             title:ticket.title,
-            price:ticket.price.toString(),
+            price:ticket.price,
             userId:ticket.userId
 
         })
