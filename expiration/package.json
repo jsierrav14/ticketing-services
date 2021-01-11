@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@js-ecommerceapp/common": "^1.0.18",
+    "@js-ecommerceapp/common": "^1.0.19",
     "@types/bull": "^3.14.4",
     "bull": "^3.20.0",
     "node-nats-streaming": "0.3.2",
