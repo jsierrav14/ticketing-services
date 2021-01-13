@@ -6,12 +6,13 @@ import app from '../app'
 declare global {
     namespace NodeJS{
         interface Global{
-             signin():string[]
+             signin(userId?:string):string[]
         }
     }
 }
 jest.mock('../nats.wrapper');
 
+process.env.STRIPE_KEY ='sk_test_51I8YkLBH3BmD4OJRYD57bGFMxs3nDJVNM98rWCWaLRQnKRB9r2jDxhAu8TrUUSPpHo8m67e6rgWzB88Q6IZ4iG6T00TBJ7YDgT'
 let mongo:any;
 
 beforeAll(async () => {
@@ -38,10 +39,10 @@ afterAll(async()=>{
 })
 
 
-global.signin = ()=>{
+global.signin = (id?:string)=>{
 
     const payload={
-        id:new moongose.Types.ObjectId().toHexString(),
+        id:id||new moongose.Types.ObjectId().toHexString(),
         email:'test@test.com'
     }
 
