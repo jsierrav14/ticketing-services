@@ -6,7 +6,7 @@ import {OrderCreatedPublisher} from '../events/publishers/order-created-publishe
 import {OrderCancelledPublisher} from '../events/publishers/order-cancelled-publisher'
 import { natsWrapper } from '../nats.wrapper';
 
-const EXPIRATION_WINDOW_SECONDS = 15*60
+const EXPIRATION_WINDOW_SECONDS = 1*60
 class OrdersController {
 
 
